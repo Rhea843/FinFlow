@@ -15,12 +15,21 @@ const transactionSchema = new mongoose.Schema(
     },
     amount: {
       type: Number,
+      required: [true, 'Amount is required'],
+      trim: true,
+    },
+    category: {
+      type: String,
       required: [true, 'Category is required'],
       trim: true,
     },
     description: {
       type: String,
       trim: true,
+      default: '',
+    },
+    date: {
+      type: Date,
       default: Date.now,
     },
   },

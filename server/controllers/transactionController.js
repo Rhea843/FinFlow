@@ -1,7 +1,9 @@
+import SavingGoal from '../models/savingGoal.js'
 import Transaction from '../models/transaction.js'
 
 //create transaction
 export const createTransaction = async (req, res) => {
+
   try{
     const {type, amount, category, description, date } = req.body
 
@@ -25,18 +27,31 @@ export const getTransactions = async (req, res) => {
   try{
     const {type, category, startDate, endDate} = req.query
 
+
     //build filter object
     const filter = {user: req.user.id}
     
     if(type) filter.type = type
     if(category) filter.category = {$regex: category, $options: 'i'}
-    if(startDate || endDate) {
+    if (startDate || endDate) {
       filter.date = {}
-      if(startDate) filter.date.$gte = new Date(startDate)
-      if(endDate) filter.date.$lte = new Date(endDate)
+      if (startDate) {
+        const start = new Date(startDate)
+        start.setHours(0, 0, 0, 0)
+        filter.date.$gte = new Date(`${startDate}T00:00:00.000Z`)
+        
+      }
+      if (endDate) {
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+        filter.date.$lte = new Date(`${endDate}T23:59:59.999Z`)
+          
+      }
     }
+   
 
     const transactions = await Transaction.find(filter).sort({date: -1})
+     
     
     //calculate totals
     const income = transactions
@@ -47,11 +62,15 @@ export const getTransactions = async (req, res) => {
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0)
 
+    const goals = await SavingGoal.find({ user: req.user.id })
+    const savings = goals.reduce((sum, goal) => sum + goal.savedAmount, 0)
+
     res.status(200).json({
       count: transactions.length,
       income,
       expenses,
       balance: income - expenses,
+      savings, 
       transactions,
     })
 
@@ -64,7 +83,7 @@ export const getTransactions = async (req, res) => {
 export const getTransaction = async (req, res) => {
   try{
     const transaction = await Transaction.findOne({
-      __id: req.params.id,
+      _id: req.params.id,
       user: req.user.id,
     })
 

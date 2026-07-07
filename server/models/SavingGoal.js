@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const SavingGoalSchema = new mongoose.Schema(
+const savingGoalSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,6 +35,6 @@ const SavingGoalSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-const SavingGoal = mongoose.model('SavingGoal', SavingGoalSchema)
+const SavingGoal = mongoose.model('SavingGoal', savingGoalSchema)
 
 export default SavingGoal

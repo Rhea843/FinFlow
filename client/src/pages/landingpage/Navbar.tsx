@@ -50,7 +50,7 @@ const Navbar = () => {
           {/* right — login button (desktop only) */}
           <button
             onClick={() => navigate('/login')}
-            className="hidden md:block border border-[#3A6EA5] text-[#3A6EA5] px-5 py-2 rounded-md text-sm font-medium hover:bg-[#3A6EA5] hover:text-white transition-all"
+            className="hidden md:block border border-[#3A6EA5] text-[#3A6EA5] px-5 py-2 rounded-md text-sm font-medium hover:bg-[#3A6EA5] hover:text-white transition-all ml-4"
           >
             Login
           </button>
@@ -67,7 +67,7 @@ const Navbar = () => {
               onClick={() => setMenuOpen(false)}
             />
 
-            <div className="md:hidden w-74 fixed top-11 left-0 right-0 bottom-0 z-50 bg-[#3A6EA5]/95 backdrop-blur px-6 py-6 flex flex-col gap-5 text-white text-base shadow-lg">
+            <div className="md:hidden w-74 fixed top-13.5 left-0 right-0 bottom-0 z-50 bg-[#3A6EA5]/95 backdrop-blur px-6 py-6 flex flex-col gap-5 text-white text-base shadow-lg">
               <button onClick={() => scrollTo('home')} className="text-left hover:text-white/70 transition-colors">Home</button>
                <hr className="border-white/20" />
               <button onClick={() => scrollTo('about')} className="text-left hover:text-white/70 transition-colors">About</button>

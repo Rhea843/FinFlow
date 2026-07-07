@@ -1,17 +1,20 @@
-import SavingGoal from '../models/SavingGoal.js';
+import SavingGoal from '../models/savingGoal.js';
+import savingTransaction from "../models/savingTransaction.js";
 
 
 //create goal
 export const createGoal = async (req, res) => {
+ 
   try{
     const{ name, targetAmount, deadline} = req.body
 
     const goal = await SavingGoal.create({
-      user: req.userid,
+      user: req.user._id,
       name,
       targetAmount,
       deadline,
     })
+    
     res.status(201).json({message: 'Goal created successfully', goal })
   }catch(error){
     res.status(500).json({message: error.message})
@@ -20,11 +23,13 @@ export const createGoal = async (req, res) => {
 
 //get all goals
 export const getGoals = async (req, res) => {
+   
   try{
-    const goals = await SavingGoal.find({ user: req.user.id}).sort({createdAt: -1})
-
+    const goals = await SavingGoal.find({ user: req.user._id}).sort({createdAt: -1})
+  
     res.status(200).json({count: goals.length, goals})
   }catch(error){
+    
     res.status(500).json({message: error.message})
   }
 } 
@@ -32,10 +37,11 @@ export const getGoals = async (req, res) => {
 
 //get a specific goal
 export const getGoal = async (req, res ) => {
+  
   try{
     const goal = await SavingGoal.findOne({
       _id:  req.params.id,
-      user: req.user.id,
+      user: req.user._id,
     })
 
     if (!goal){
@@ -50,7 +56,7 @@ export const getGoal = async (req, res ) => {
 }
 
 //add money to goal
-export const addToGoal = async (res,req) => {
+export const addToGoal = async (req,res) => {
   try{
     const {amount} = req.body
 
@@ -60,7 +66,7 @@ export const addToGoal = async (res,req) => {
 
     const goal = await SavingGoal.findOne({
       _id: req.params.id,
-      user: req.user.id,
+      user: req.user._id,
     })
 
     if (!goal){
@@ -80,6 +86,12 @@ export const addToGoal = async (res,req) => {
 
     await goal.save()
 
+    await savingTransaction.create({
+      user: req.user.id,
+      goal: goal._id,
+      amount,
+    });
+
     res.status(200).json({message: 'Amount added to goal', goal})
   }catch(error){
     res.status(500).json({message: error.message})
@@ -87,7 +99,7 @@ export const addToGoal = async (res,req) => {
 }
 
 //update goal
-export const updateGoal = async (res, req) => {
+export const updateGoal = async (req, res) => {
   try{
     const goal = await SavingGoal.findOneAndUpdate(
       {_id: req.params.id, user: req.user.id},
@@ -111,7 +123,7 @@ export const deleteGoal = async (req, res) => {
   try{
     const goal = await SavingGoal.findOneAndDelete({
       _id: req.params.id,
-      user: req.user.id,
+      user: req.user._id,
     })
 
     if(!goal){
@@ -122,5 +134,53 @@ export const deleteGoal = async (req, res) => {
   }catch(error){
     res.status(500).json({message: error.message})
   
+  }
+}
+
+//withdraw from goal
+export const withdrawFromGoal = async (req, res) => {
+  try {
+    const { amount, note } = req.body;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ message: 'Amount must be greater than 0' })
+    }
+
+    const goal = await SavingGoal.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!goal) {
+      return res.status(404).json({
+        message: "Goal not found",
+      });
+    }
+
+    if (amount > goal.savedAmount) {
+      return res.status(400).json({
+        message: "Insufficient saved amount",
+      });
+    }
+
+    goal.savedAmount -= amount;
+
+    if (goal.savedAmount < goal.targetAmount) {
+      goal.isCompleted = false;
+    }
+
+    await goal.save();
+
+    await savingTransaction.create({
+      user: req.user.id,
+      goal: goal._id,
+      amount,
+      type: "withdrawal",
+      note: note || '',
+    });
+
+   res.status(200).json({ message: 'Withdrawal successful', goal })
+  } catch (error) {
+    res.status(500).json({ message: error.message })
   }
 }

@@ -9,15 +9,20 @@ import VerifyOTP from './pages/auth/VerifyOTP'
 
 
 //app pages
-import Dashboard from './pages/dashboard/Dashboard'
+import Dashboard from './pages/dashboard/MainDashboard'
 import Transactions from './pages/transactions/Transactions'
-import AddTransaction from './pages/transactions/AddTransaction'
+import Expense from './pages/transactions/Expense'
+import Income from './pages/transactions/Income'
 import Goals from './pages/goals/Goals'
 import AddGoal from './pages/goals/AddGoal'
 import Profile from './pages/profile/Profile'
+import EditTransaction from './components/modals/EditTransaction'
+import Analytics from './pages/Analytics/Analytics'
 
 //components
 import ProtectedRoute from './components/protectedRoute'
+
+
 
 const App = () => {
   const { user } = useAuth()
@@ -31,11 +36,15 @@ const App = () => {
 
       {/* private routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
       <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
-      <Route path="/transactions/add" element={<ProtectedRoute><AddTransaction /></ProtectedRoute>} />
+      <Route path="/transactions/expense" element={<ProtectedRoute><Expense /></ProtectedRoute>} />
+      <Route path="/transactions/income" element={<ProtectedRoute><Income /></ProtectedRoute>} />
+      <Route path="/transactions/edit/:id" element={<ProtectedRoute><EditTransaction /></ProtectedRoute>} />
       <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
       <Route path="/goals/add" element={<ProtectedRoute><AddGoal /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
 
      {/* DEFAULT REDIRECT */}
       <Route path="*" element={<Navigate to="/" />} />
