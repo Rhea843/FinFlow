@@ -21,7 +21,7 @@ const SavingGoals = ({ goals, onSuccess }: Props) => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-[#2e2e2e] dark:text-[#fafafa]">Savings Goals</h3>
         <button
-          onClick={() => navigate('/goals')}
+          onClick={() => navigate('/goals/all')}
           className="text-xs text-[#2e2e2e] dark:text-[#fafafa] hover:underline"
         >
           See all

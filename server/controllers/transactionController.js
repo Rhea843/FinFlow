@@ -101,7 +101,7 @@ export const getTransaction = async (req, res) => {
 export const updateTransaction = async (req, res) => {
   try{
     const transaction = await Transaction.findOneAndUpdate(
-      { __id: req.params.id, user: req.user.id },
+      { _id: req.params.id, user: req.user.id },
       req.body,
       { new: true, runValidators: true }
     )
@@ -118,7 +118,7 @@ export const updateTransaction = async (req, res) => {
 export const deleteTransaction = async (req, res) => {
   try{
     const transaction = await Transaction.findOneAndDelete({
-      __id: req.params.id,
+      _id: req.params.id,
       user: req.user.id,
     })
 

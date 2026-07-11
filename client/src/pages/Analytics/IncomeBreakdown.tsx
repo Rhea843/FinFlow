@@ -99,7 +99,7 @@ const IncomeBreakdown = ({ transactions }: Props) => {
       
                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <p className="text-sm font-bold text-[#2e2e2e] dark:text-[#fafafa]">₦{total.toLocaleString()}</p>
-                    <p className="text-xs text-slate-400">Spent this month</p>
+                    <p className="text-xs text-slate-400">Earned this {filter === 'daily' ? 'today' : filter === 'weekly' ? 'week' : 'month' }</p>
                   </div>
                </div>
                 <div className="flex flex-wrap gap-2 mt-2">

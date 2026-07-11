@@ -1,5 +1,5 @@
+import './config/env.js'  
 import express from'express';
-import dotenv from 'dotenv';
 import cors from 'cors'
 import connectDB from './config/database.js';
 import authRoutes from './routes/authRoute.js';
@@ -7,7 +7,8 @@ import userRouter from './routes/userRoutes.js';
 import transactionRoutes from './routes/transactionRoute.js'; 
 import savingGoalRoutes from './routes/savingGoalRoutes.js';
 import savingTransactionRoutes from './routes/savingTransactionRoutes.js'
-dotenv.config()
+
+
 connectDB()
 
 const app = express()

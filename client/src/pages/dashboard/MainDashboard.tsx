@@ -16,11 +16,6 @@ import type { TransactionSummary, SavingGoal, RecentActivities, Transaction, Sav
 
 
 
-
-
-
-
-
 const Dashboard = () => {
   const { user } = useAuth()
 

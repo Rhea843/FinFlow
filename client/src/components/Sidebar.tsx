@@ -5,6 +5,7 @@ import {ChartNoAxesCombined, LayoutDashboard, ArrowLeftRight, Settings, HelpCirc
 import { FaPiggyBank } from "react-icons/fa6";
 import useAuth from '../hooks/useAuth.ts'
 import { useTheme } from '../context/ThemeContext.tsx';
+import LogoutModal from '../components/modals/LogoutModal'
 
 type SidebarProps = {
   sidebarOpen: boolean;
@@ -19,6 +20,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
   const [transactionsOpen, setTransactionsOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { isDark, toggleTheme } = useTheme()
+  const [logoutModal, setLogoutModal] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -147,10 +149,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
             <HelpCircle className="w-5 h-5" />
             Help
           </button>
-          <button onClick={handleLogout} className={`${navItem} ${inactive} w-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950`}>
+          <button onClick={() => setLogoutModal(true)}
+            className={`${navItem} ${inactive} w-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950`}
+          >
             <LogOut className="w-5 h-5" />
             Log out
           </button>
+
+          {logoutModal && (
+            <LogoutModal onClose={() => setLogoutModal(false)} />
+          )}
        </div>
      </div>
       

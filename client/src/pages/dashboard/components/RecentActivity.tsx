@@ -1,7 +1,9 @@
 import {  Search } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'  
 import type { Transaction, RecentActivities } from '../../../types/index.ts'
 import EditTransaction from '../../../components/modals/EditTransaction.tsx'
+
 
 type Props = {
   activities: RecentActivities[]
@@ -10,15 +12,15 @@ type Props = {
 } 
 
 const RecentActivity = ({ activities, onEdit, onDelete  }: Props) => {
+  const navigate = useNavigate() 
   const [search, setSearch] = useState('')
-  const [showAll, setShowAll] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
 
    const filtered = activities.filter(activity =>
     activity.title.toLowerCase().includes(search.toLowerCase()) ||
     activity.category.toLowerCase().includes(search.toLowerCase())
   )
-  const displayed = showAll ? filtered : filtered.slice(0, 15)
+  const displayed = filtered.slice(0, 15)
 
 
   return (
@@ -47,10 +49,10 @@ const RecentActivity = ({ activities, onEdit, onDelete  }: Props) => {
           </h2>
 
           <button
-            onClick={() => setShowAll(!showAll)}
+             onClick={() => navigate('/transactions')}
             className="text-xs text-[#2e2e2e] dark:text-[#fafafa]"
           >
-            {showAll ? 'Show Less' : 'See All'}
+             See All
           </button>
 
         </div>

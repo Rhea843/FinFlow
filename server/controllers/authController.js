@@ -124,9 +124,19 @@ export const login = async (req, res) => {
       expiresIn: '7d',
     });
 
-    res.status(200).json({message: 'Login successful', token,
-      user: { id: user._id, name: user.name, email: user.email, profilePic: user.profilePic },
-    });
+    res.status(200).json({
+  message: 'Login successful',
+  token,
+  user: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    profilePic: user.profilePic,
+    isVerified: user.isVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  },
+})
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -146,10 +156,8 @@ export const resendOTP = async (req, res) => {
       return res.status(400).json({message: 'User is already verified'});
     }
 
-    const otp = generateOTP();
-    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-    
-
+    const otp = generateOTP()
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000)
     user.otp = otp
     user.otpExpiry = otpExpiry
     await user.save()
